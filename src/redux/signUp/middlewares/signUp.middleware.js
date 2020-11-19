@@ -33,6 +33,10 @@ const signUpMiddleware = ({ dispatch, getState }) => (next) => (action) => {
     dispatch({ type: "UPDATE_FORM_VALID_STATE", payload: !isFormInvalid });
   }
 
+  if (action.type === "SUBMIT_FORM") {
+    // TODO: here's the place for an async service call for example...
+  }
+
   return next(action);
 };
 
