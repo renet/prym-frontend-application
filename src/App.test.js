@@ -1,9 +1,18 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { render } from "./utils/testing-utils";
 import App from "./App";
 
-test("renders learn react link", () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
+const initialState = {
+  signUp: {
+    fieldsToValidate: {},
+    validatedFields: {},
+    isValid: false,
+    values: {},
+  },
+};
+
+test("renders form", () => {
+  const { getByText } = render(<App />, { initialState });
+  const linkElement = getByText(/Create an Account/);
   expect(linkElement).toBeInTheDocument();
 });
