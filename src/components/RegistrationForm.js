@@ -1,10 +1,11 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import InputField from "./InputField";
 import CheckboxField from "./CheckboxField";
 import TextareaField from "./TextareaField";
 import { Button } from "./Button";
+import { RULES } from "../utils/validation-utils";
 
 const FormWrapper = styled.form`
   align-items: stretch;
@@ -73,16 +74,27 @@ const FormBottom = styled.div`
 `;
 
 export const RegistrationForm = () => {
+  const dispatch = useDispatch();
   const isValid = useSelector((state) => state.signUp.isValid);
   const showAddress = useSelector((state) => state.signUp.values.showAddress);
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    console.log("form submit");
+    dispatch({ type: "SUBMIT_FORM" });
+    console.log(
+      "form submitted with the following values",
+      Array.from(
+        document.forms.prym_registration_form.elements
+      ).map(({ name, value }) => ({ key: name, value }))
+    );
   };
 
   return (
-    <FormWrapper onSubmit={handleFormSubmit}>
+    <FormWrapper
+      method="POST"
+      name="prym_registration_form"
+      onSubmit={handleFormSubmit}
+    >
       <Headline>Create an Account</Headline>
       <FormColumn>
         <InputField
@@ -90,12 +102,18 @@ export const RegistrationForm = () => {
           name="firstName"
           required
           validationError="Please enter at least 2 characters."
+          validationRules={[
+            { ruleName: RULES.MIN_LENGTH, options: { minLength: 2 } },
+          ]}
         />
         <InputField
           label="Last name"
           name="lastName"
           required
           validationError="Please enter at least 2 characters."
+          validationRules={[
+            { ruleName: RULES.MIN_LENGTH, options: { minLength: 2 } },
+          ]}
         />
         <InputField label="Nick name" name="nickName" />
         <InputField
@@ -104,6 +122,7 @@ export const RegistrationForm = () => {
           type="email"
           required
           validationError="Please enter a valid e-mail address."
+          validationRules={[{ ruleName: RULES.EMAIL }]}
         />
         <InputField
           label="Password"
@@ -111,6 +130,10 @@ export const RegistrationForm = () => {
           type="password"
           required
           validationError="The password must be at least 6 characters long, containing at least 2 digits."
+          validationRules={[
+            { ruleName: RULES.MIN_LENGTH, options: { minLength: 6 } },
+            { ruleName: RULES.PASSWORD },
+          ]}
         />
         <InputField
           label="Repeat password"
@@ -118,6 +141,12 @@ export const RegistrationForm = () => {
           type="password"
           required
           validationError="The passwords do not match."
+          validationRules={[
+            {
+              ruleName: RULES.MATCH_FIELD_VALUE,
+              options: { fieldName: "password" },
+            },
+          ]}
         />
         <CheckboxField label="Show Address" name="showAddress" />
       </FormColumn>
@@ -130,6 +159,9 @@ export const RegistrationForm = () => {
               required
               tabIndex={showAddress ? undefined : -1}
               validationError="Please enter at least 4 characters."
+              validationRules={[
+                { ruleName: RULES.MIN_LENGTH, options: { minLength: 4 } },
+              ]}
             />
             <InputField
               label="House/Apartment"
@@ -143,6 +175,10 @@ export const RegistrationForm = () => {
               required
               tabIndex={showAddress ? undefined : -1}
               validationError="Please enter exactly 5 digits."
+              validationRules={[
+                { ruleName: RULES.MAX_LENGTH, options: { maxLength: 5 } },
+                { ruleName: RULES.MIN_LENGTH, options: { minLength: 5 } },
+              ]}
             />
             <InputField
               label="City"
@@ -150,6 +186,9 @@ export const RegistrationForm = () => {
               required
               tabIndex={showAddress ? undefined : -1}
               validationError="Please enter at least 4 characters."
+              validationRules={[
+                { ruleName: RULES.MIN_LENGTH, options: { minLength: 4 } },
+              ]}
             />
           </AddressWrapper>
           <TextareaField label="Additional information" name="more" />

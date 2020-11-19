@@ -37,27 +37,29 @@ const ErrorMessage = styled.p`
 `;
 
 export const TextareaField = ({
+  id,
   isInvalid,
   label,
   name,
-  onChange,
   onBlur,
+  onChange,
   required,
   type = "text",
   validationError,
   value,
 }) => {
   return (
-    <Label htmlFor={name}>
+    <Label htmlFor={id}>
       {label}
       <Textarea
-        id={name}
-        onChange={onChange}
+        id={id}
+        isInvalid={isInvalid}
+        name={name}
         onBlur={onBlur}
+        onChange={onChange}
         required={required}
         type={type}
         value={value}
-        isInvalid={isInvalid}
       />
       <ErrorMessage>{isInvalid && validationError}</ErrorMessage>
     </Label>
@@ -96,14 +98,15 @@ export default ({ label, name, required, type, validationError }) => {
   return (
     <TextareaField
       id={name}
+      isInvalid={!isValid}
       label={label}
-      onChange={handleChange}
+      name={name}
       onBlur={handleBlur}
+      onChange={handleChange}
       required={required}
       type={type}
       validationError={validationError}
       value={value}
-      isInvalid={!isValid}
     />
   );
 };

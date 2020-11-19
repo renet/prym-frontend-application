@@ -37,6 +37,7 @@ const ErrorMessage = styled.p`
 `;
 
 export const InputField = ({
+  id,
   isInvalid,
   label,
   name,
@@ -49,13 +50,14 @@ export const InputField = ({
   value,
 }) => {
   return (
-    <Label htmlFor={name}>
+    <Label htmlFor={id}>
       <p>
         {label}
         {required && <span> *</span>}
       </p>
       <Input
-        id={name}
+        id={id}
+        name={name}
         isInvalid={isInvalid}
         onBlur={onBlur}
         onChange={onChange}
@@ -69,15 +71,24 @@ export const InputField = ({
   );
 };
 
-export default ({ label, name, required, tabIndex, type, validationError }) => {
+export default ({
+  label,
+  name,
+  required,
+  tabIndex,
+  type,
+  validationError,
+  validationRules = [],
+}) => {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
     dispatch({
       type: "REGISTER_FIELD",
-      payload: { name },
+      payload: { name, validationRules },
     });
-  }, [dispatch, name]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, name, JSON.stringify(validationRules)]);
 
   const value = useSelector((state) => state.signUp.values[name] || "");
   const isValid = useSelector((state) => state.signUp.validatedFields[name]);
@@ -103,6 +114,7 @@ export default ({ label, name, required, tabIndex, type, validationError }) => {
       id={name}
       isInvalid={!isValid}
       label={label}
+      name={name}
       onBlur={handleBlur}
       onChange={handleChange}
       required={required}

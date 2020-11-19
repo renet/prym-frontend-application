@@ -55,6 +55,7 @@ const ErrorMessage = styled.p`
 
 export const CheckboxField = ({
   checked,
+  id,
   isInvalid,
   label,
   name,
@@ -64,15 +65,16 @@ export const CheckboxField = ({
   validationError,
 }) => {
   return (
-    <Label htmlFor={name}>
+    <Label htmlFor={id}>
       <Input
-        id={name}
+        checked={checked}
+        id={id}
+        isInvalid={isInvalid}
+        name={name}
         onBlur={onBlur}
         onChange={onChange}
         required={required}
         type="checkbox"
-        checked={checked}
-        isInvalid={isInvalid}
       />
       {label}
       <ErrorMessage>{isInvalid && validationError}</ErrorMessage>
@@ -111,9 +113,11 @@ export default ({ label, name, required, validationError }) => {
 
   return (
     <CheckboxField
-      label={label}
       checked={checked}
+      id={name}
       isInvalid={!isValid}
+      label={label}
+      name={name}
       onBlur={handleBlur}
       onChange={handleValueChange}
       required={required}

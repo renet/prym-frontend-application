@@ -1,10 +1,13 @@
+const initialState = {
+  fieldsToValidate: {},
+  validatedFields: {},
+  validationRules: {},
+  isValid: false,
+  values: {},
+};
+
 export const signUpReducer = (
-  state = {
-    fieldsToValidate: {},
-    validatedFields: {},
-    isValid: false,
-    values: {},
-  },
+  state = { ...initialState },
   { type, payload }
 ) => {
   switch (type) {
@@ -14,6 +17,10 @@ export const signUpReducer = (
         validatedFields: {
           ...state.validatedFields,
           [payload.name]: true,
+        },
+        validationRules: {
+          ...state.validationRules,
+          [payload.name]: payload.validationRules,
         },
       };
     case "UPDATE_FORM_VALID_STATE":
@@ -37,6 +44,10 @@ export const signUpReducer = (
         ...state,
         fieldsToValidate: { ...state.fieldsToValidate, [payload.name]: true },
       };
+    case "SUBMIT_FORM":
+      // TODO: maybe reset form with something like:
+      // return { ...initialState };
+      return state;
     default:
       return state;
   }
